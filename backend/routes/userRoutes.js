@@ -24,6 +24,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
+
 // router.get('/', async (req, res) => {
 //         try {
 //             const users = await Attendance.find({});

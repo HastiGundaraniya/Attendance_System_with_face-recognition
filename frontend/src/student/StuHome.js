@@ -15,6 +15,7 @@ function StuHome() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('')
+    console.log(studentId)
     try {
       const response = await fetch('/api/attendance/studata', {
         method: 'POST',

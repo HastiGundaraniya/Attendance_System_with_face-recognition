@@ -23,6 +23,9 @@ function LoginForm() {
 
     await login(email, password, authLevel)
 
+    const response = await login(email, password, authLevel)
+    console.log(response)
+    
     if (authLevel === "professor") {
       navigate('/professor')
     }
