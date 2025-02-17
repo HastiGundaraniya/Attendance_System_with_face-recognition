@@ -40,6 +40,8 @@ function AddAttendance() {
   
       if (response.ok) {
         setMessage('Attendance submitted successfully!');
+        setDate('')
+        setSubject('')
       } else {
         setMessage('Failed to submit attendance.');
       }

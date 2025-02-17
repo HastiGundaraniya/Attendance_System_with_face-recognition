@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useLogout } from '../hooks/useLogut';
+import { useLogout } from '../hooks/useLogout';
 import { useAuthContext } from '../hooks/useAuthContext';
 
 function StuHome() {
@@ -9,6 +9,8 @@ function StuHome() {
   const today = new Date().toISOString().split('T')[0];
   const [date,setDate] = useState(today)
   const [status,setStatus] = useState('')
+  const [totalDay,setTotalDay] = useState('')
+  const [presentDay,setPresentDay] = useState('')
   const [error, setError] = useState('')
   const studentId = user._id
 
@@ -31,6 +33,27 @@ function StuHome() {
       setStatus(json.status)
     }
     catch (error) {
+      console.error('Error fetching data:', error.message);
+    }
+  }
+  const attendanceCheck = async (e) => {
+    e.preventDefault();
+
+    try{
+      const response = await fetch('/api/attendance/monthly', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({subject , studentId})
+      });
+      if(!response.ok){
+        setError("No data found")
+      }
+      const json = await response.json();
+      console.log(json)
+      setTotalDay(json.totalDays)
+      setPresentDay(json.presentDays)
+    }
+    catch (error){
       console.error('Error fetching data:', error.message);
     }
   }
@@ -60,6 +83,18 @@ function StuHome() {
       <h5>Status: {status ? <div>{status}</div> : <div>No Data</div>}</h5>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <br />
+      <h3>show total attendance</h3>
+      <form onSubmit={attendanceCheck}>
+      <label>Select Subject:</label>
+        <select onChange={(e) => setSubject(e.target.value)} value={subject}>
+          <option value="">--select--</option>
+          <option value="AI">AI</option>
+          <option value="ML">ML</option>
+          <option value="SE">SE</option>
+        </select>
+        <button>Check</button>
+      </form>
+      {totalDay && presentDay ? <p>out of {totalDay} days, you are present in {presentDay} days </p>: null}
       <button onClick={handleCLick}>Log Out</button>
     </div>
   

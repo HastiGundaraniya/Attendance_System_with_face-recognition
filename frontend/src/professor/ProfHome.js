@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLogout } from '../hooks/useLogut';
+import { useLogout } from '../hooks/useLogout';
 import { useAuthContext } from '../hooks/useAuthContext';
 
 function ProfHome() {

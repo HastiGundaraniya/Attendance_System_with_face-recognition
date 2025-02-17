@@ -48,4 +48,35 @@ router.post('/studata', async (req, res) => {
     }
 });
 
+router.post('/monthly', async (req, res) => {
+    try {
+        const { studentId, subject } = req.body;
+
+        if (!studentId || !subject) {
+            return res.status(400).json({ message: "Student ID and Subject are required" });
+        }
+
+        // Fetch all attendance records for the given subject
+        const attendanceRecords = await Attendance.find({ subject });
+
+        // Extract unique dates where attendance was recorded
+        const uniqueDates = [...new Set(attendanceRecords.map(record => record.date))];
+        const totalDays = uniqueDates.length; // Total conducted days for this subject
+
+        // Count the number of days the student was marked present
+        let presentDays = 0;
+        attendanceRecords.forEach(record => {
+            const studentAttendance = record.students.find(s => s.studentId.toString() === studentId);
+            if (studentAttendance && studentAttendance.status === 'present') {
+                presentDays++;
+            }
+        });
+
+        res.json({ totalDays, presentDays });
+
+    } catch (error) {
+        console.error("Error fetching monthly attendance:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 module.exports = router;
